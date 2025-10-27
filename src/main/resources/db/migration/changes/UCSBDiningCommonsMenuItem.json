@@ -12,7 +12,7 @@
               "not": [
                 {
                   "tableExists": {
-                    "tableName": "UCSBDININGCOMMONSMENUITEM"
+                    "tableName": "ucsbdining_commons_menu_item"
                   }
                 }
               ]
@@ -52,7 +52,7 @@
                     }
                   }
                 ],
-                "tableName": "UCSBDININGCOMMONSMENUITEM"
+                "tableName": "ucsbdining_commons_menu_item"
               }
             }
           ]
