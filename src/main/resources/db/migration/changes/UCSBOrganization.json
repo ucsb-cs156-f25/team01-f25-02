@@ -11,7 +11,7 @@
               "not": [
                 {
                   "tableExists": {
-                    "tableName": "UCSBORGANIZATION"
+                    "tableName": "UCSBORGANIZATIONS"
                   }
                 }
               ]
@@ -25,16 +25,7 @@
                     "column": {
                       "constraints": {
                         "primaryKey": true,
-                        "primaryKeyName": "ORGANIZATION_PK"
-                      },
-                      "name": "CODE",
-                      "type": "VARCHAR(255)"
-                    }
-                  },
-                  {
-                    "column": {
-                      "constraints": {
-                        "nullable": false
+                        "primaryKeyName": "ORGANIZATIONS_PK"
                       },
                       "name": "ORG_CODE",
                       "type": "VARCHAR(255)"
