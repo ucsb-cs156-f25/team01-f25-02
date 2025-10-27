@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = &quot;UCSBDiningCommonsMenuItem&quot;)
 @RequestMapping(&quot;/api/UCSBDiningCommonsMenuItem&quot;)
 @RestController
-<span class="nc" id="L22">@Slf4j</span>
-<span class="nc" id="L23">public class UCSBDiningCommonsMenuItemController extends ApiController {</span>
+<span class="fc" id="L22">@Slf4j</span>
+<span class="fc" id="L23">public class UCSBDiningCommonsMenuItemController extends ApiController {</span>
   @Autowired UCSBDiningCommonsMenuItemRepository ucsbDiningCommonsMenuItemRepository;
 
   /**
@@ -32,9 +32,9 @@ import org.springframework.web.bind.annotation.RestController;
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;/all&quot;)
   public Iterable&lt;UCSBDiningCommonsMenuItem&gt; allUCSBDiningCommonsMenuItem() {
-<span class="nc" id="L35">    Iterable&lt;UCSBDiningCommonsMenuItem&gt; ucsbDiningCommonsMenuItem =</span>
-<span class="nc" id="L36">        ucsbDiningCommonsMenuItemRepository.findAll();</span>
-<span class="nc" id="L37">    return ucsbDiningCommonsMenuItem;</span>
+<span class="fc" id="L35">    Iterable&lt;UCSBDiningCommonsMenuItem&gt; ucsbDiningCommonsMenuItem =</span>
+<span class="fc" id="L36">        ucsbDiningCommonsMenuItemRepository.findAll();</span>
+<span class="fc" id="L37">    return ucsbDiningCommonsMenuItem;</span>
   }
 
   /**
@@ -58,15 +58,15 @@ import org.springframework.web.bind.annotation.RestController;
     // See: https://www.baeldung.com/spring-date-parameters
 
     // I removed log.info()
-<span class="nc" id="L61">    UCSBDiningCommonsMenuItem ucsbDiningCommonsMenuItem = new UCSBDiningCommonsMenuItem();</span>
-<span class="nc" id="L62">    ucsbDiningCommonsMenuItem.setDiningCommonsCode(diningCommonsCode);</span>
-<span class="nc" id="L63">    ucsbDiningCommonsMenuItem.setName(name);</span>
-<span class="nc" id="L64">    ucsbDiningCommonsMenuItem.setStation(station);</span>
+<span class="fc" id="L61">    UCSBDiningCommonsMenuItem ucsbDiningCommonsMenuItem = new UCSBDiningCommonsMenuItem();</span>
+<span class="fc" id="L62">    ucsbDiningCommonsMenuItem.setDiningCommonsCode(diningCommonsCode);</span>
+<span class="fc" id="L63">    ucsbDiningCommonsMenuItem.setName(name);</span>
+<span class="fc" id="L64">    ucsbDiningCommonsMenuItem.setStation(station);</span>
 
-<span class="nc" id="L66">    UCSBDiningCommonsMenuItem savedUCSBDiningCommonsMenuItem =</span>
-<span class="nc" id="L67">        ucsbDiningCommonsMenuItemRepository.save(ucsbDiningCommonsMenuItem);</span>
+<span class="fc" id="L66">    UCSBDiningCommonsMenuItem savedUCSBDiningCommonsMenuItem =</span>
+<span class="fc" id="L67">        ucsbDiningCommonsMenuItemRepository.save(ucsbDiningCommonsMenuItem);</span>
 
-<span class="nc" id="L69">    return savedUCSBDiningCommonsMenuItem;</span>
+<span class="fc" id="L69">    return savedUCSBDiningCommonsMenuItem;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
