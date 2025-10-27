@@ -104,7 +104,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
             .orgCode("ZPR")
             .orgTranslationShort("ZETA_PHI_RHO")
             .orgTranslation("ZETA_PHI_RHO")
-            .inactive(false)
+            .inactive(true)
             .build();
 
     when(ucsbOrganizationRepository.save(eq(zpr))).thenReturn(zpr);
@@ -113,7 +113,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
     MvcResult response =
         mockMvc
             .perform(
-                post("/api/ucsborganization/post?orgCode=ZPR&orgTranslationShort=ZETA_PHI_RHO&orgTranslation=ZETA_PHI_RHO&inactive=false")
+                post("/api/ucsborganization/post?orgCode=ZPR&orgTranslationShort=ZETA_PHI_RHO&orgTranslation=ZETA_PHI_RHO&inactive=true")
                     .with(csrf()))
             .andExpect(status().isOk())
             .andReturn();
@@ -123,5 +123,9 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
     String expectedJson = mapper.writeValueAsString(zpr);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(expectedJson, responseString);
+
+    // Additional test for inactive field
+    UCSBOrganization savedOrganization = mapper.readValue(responseString, UCSBOrganization.class);
+    assertEquals(true, savedOrganization.getInactive());
   }
 }
