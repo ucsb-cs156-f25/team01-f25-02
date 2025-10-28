@@ -6,7 +6,7 @@ import edu.ucsb.cs156.example.repositories.RecommendationRequestRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** This is a REST controller for RecommendationRequests */
 @Tag(name = "RecommendationRequest")
-@RequestMapping("/api/recommendationrequests")
+@RequestMapping("/api/recommendationrequest")
 @RestController
 @Slf4j
 public class RecommendationRequestController extends ApiController {
@@ -61,18 +61,19 @@ public class RecommendationRequestController extends ApiController {
       @Parameter(name = "dateRequested")
           @RequestParam("dateRequested")
           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-          LocalDateTime dateRequested,
+          ZonedDateTime dateRequested,
       @Parameter(name = "dateNeeded")
           @RequestParam("dateNeeded")
           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-          LocalDateTime dateNeeded,
+          ZonedDateTime dateNeeded,
       @Parameter(name = "done") @RequestParam boolean done)
       throws JsonProcessingException {
 
     // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     // See: https://www.baeldung.com/spring-date-parameters
 
-    log.info("localDateTime={}", dateRequested);
+    log.info("dateRequested={}", dateRequested);
+    log.info("dateNeeded={}", dateNeeded);
 
     RecommendationRequest recommendationRequest = new RecommendationRequest();
     recommendationRequest.setRequesterEmail(requesterEmail);
