@@ -15,7 +15,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "HelpRequests")
+@Entity(
+    name =
+        "HelpRequests") // modified from "HelpRequests" to "help_requests" on tues oct 28 12:44 pm
 public class HelpRequest {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
