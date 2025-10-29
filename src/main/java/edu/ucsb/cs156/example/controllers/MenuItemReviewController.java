@@ -2,6 +2,7 @@ package edu.ucsb.cs156.example.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.ucsb.cs156.example.entities.MenuItemReview;
+import edu.ucsb.cs156.example.errors.EntityNotFoundException;
 import edu.ucsb.cs156.example.repositories.MenuItemReviewRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,6 +14,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -78,5 +81,34 @@ public class MenuItemReviewController extends ApiController {
     MenuItemReview savedReview = menuItemReviewRepository.save(review);
 
     return savedReview;
+  }
+
+  /**
+   * Update a single menu item review. Accessible only to users with the role "ROLE_ADMIN".
+   *
+   * @param id the id of the menu item review to update
+   * @param incoming the new review data
+   * @return the updated menu item review
+   */
+  @Operation(summary = "Update a single menu item review")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PutMapping("")
+  public MenuItemReview updateMenuItemReview(
+      @Parameter(name = "id") @RequestParam Long id, @RequestBody MenuItemReview incoming) {
+
+    MenuItemReview review =
+        menuItemReviewRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(MenuItemReview.class, id));
+
+    review.setItemId(incoming.getItemId());
+    review.setReviewerEmail(incoming.getReviewerEmail());
+    review.setStars(incoming.getStars());
+    review.setDateReviewed(incoming.getDateReviewed());
+    review.setComments(incoming.getComments());
+
+    menuItemReviewRepository.save(review);
+
+    return review;
   }
 }
