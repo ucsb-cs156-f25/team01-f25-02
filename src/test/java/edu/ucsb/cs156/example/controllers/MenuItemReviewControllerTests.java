@@ -202,6 +202,72 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
 
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
+  public void an_admin_user_can_post_a_menuitemreview_with_stars_equals_0() throws Exception {
+    // arrange - test boundary value 0 is valid
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+
+    MenuItemReview review1 =
+        MenuItemReview.builder()
+            .itemId(27L)
+            .reviewerEmail("cgaucho@ucsb.edu")
+            .stars(0)
+            .dateReviewed(ldt1)
+            .comments("Terrible!")
+            .build();
+
+    when(menuItemReviewRepository.save(eq(review1))).thenReturn(review1);
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                post("/api/menuitemreview/post?itemId=27&reviewerEmail=cgaucho@ucsb.edu&stars=0&dateReviewed=2022-01-03T00:00:00&comments=Terrible!")
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+    verify(menuItemReviewRepository, times(1)).save(review1);
+    String expectedJson = mapper.writeValueAsString(review1);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(expectedJson, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void an_admin_user_can_post_a_menuitemreview_with_stars_equals_5() throws Exception {
+    // arrange - test boundary value 5 is valid
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+
+    MenuItemReview review1 =
+        MenuItemReview.builder()
+            .itemId(27L)
+            .reviewerEmail("cgaucho@ucsb.edu")
+            .stars(5)
+            .dateReviewed(ldt1)
+            .comments("Excellent!")
+            .build();
+
+    when(menuItemReviewRepository.save(eq(review1))).thenReturn(review1);
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                post("/api/menuitemreview/post?itemId=27&reviewerEmail=cgaucho@ucsb.edu&stars=5&dateReviewed=2022-01-03T00:00:00&comments=Excellent!")
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+    verify(menuItemReviewRepository, times(1)).save(review1);
+    String expectedJson = mapper.writeValueAsString(review1);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(expectedJson, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
   public void an_admin_user_cannot_post_a_menuitemreview_with_stars_greater_than_5()
       throws Exception {
     // act - expecting IllegalArgumentException to be thrown
@@ -348,6 +414,102 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
     // assert - should not call findById or save because validation fails first
     verify(menuItemReviewRepository, times(0)).findById(any());
     verify(menuItemReviewRepository, times(0)).save(any());
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_can_edit_menuitemreview_with_stars_equals_0() throws Exception {
+    // arrange - test boundary value 0 is valid
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+    LocalDateTime ldt2 = LocalDateTime.parse("2022-01-04T00:00:00");
+
+    MenuItemReview reviewOrig =
+        MenuItemReview.builder()
+            .itemId(27L)
+            .reviewerEmail("cgaucho@ucsb.edu")
+            .stars(3)
+            .dateReviewed(ldt1)
+            .comments("Good")
+            .build();
+
+    MenuItemReview reviewEdited =
+        MenuItemReview.builder()
+            .itemId(27L)
+            .reviewerEmail("cgaucho@ucsb.edu")
+            .stars(0)
+            .dateReviewed(ldt2)
+            .comments("Terrible!")
+            .build();
+
+    String requestBody = mapper.writeValueAsString(reviewEdited);
+
+    when(menuItemReviewRepository.findById(eq(67L))).thenReturn(Optional.of(reviewOrig));
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/menuitemreview?id=67")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+    verify(menuItemReviewRepository, times(1)).findById(67L);
+    verify(menuItemReviewRepository, times(1)).save(reviewEdited);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(requestBody, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_can_edit_menuitemreview_with_stars_equals_5() throws Exception {
+    // arrange - test boundary value 5 is valid
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+    LocalDateTime ldt2 = LocalDateTime.parse("2022-01-04T00:00:00");
+
+    MenuItemReview reviewOrig =
+        MenuItemReview.builder()
+            .itemId(27L)
+            .reviewerEmail("cgaucho@ucsb.edu")
+            .stars(3)
+            .dateReviewed(ldt1)
+            .comments("Good")
+            .build();
+
+    MenuItemReview reviewEdited =
+        MenuItemReview.builder()
+            .itemId(27L)
+            .reviewerEmail("cgaucho@ucsb.edu")
+            .stars(5)
+            .dateReviewed(ldt2)
+            .comments("Excellent!")
+            .build();
+
+    String requestBody = mapper.writeValueAsString(reviewEdited);
+
+    when(menuItemReviewRepository.findById(eq(67L))).thenReturn(Optional.of(reviewOrig));
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/menuitemreview?id=67")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+    verify(menuItemReviewRepository, times(1)).findById(67L);
+    verify(menuItemReviewRepository, times(1)).save(reviewEdited);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(requestBody, responseString);
   }
 
   @WithMockUser(roles = {"ADMIN", "USER"})
