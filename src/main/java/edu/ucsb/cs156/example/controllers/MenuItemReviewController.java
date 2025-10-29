@@ -2,6 +2,7 @@ package edu.ucsb.cs156.example.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.ucsb.cs156.example.entities.MenuItemReview;
+import edu.ucsb.cs156.example.errors.EntityNotFoundException;
 import edu.ucsb.cs156.example.repositories.MenuItemReviewRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,5 +80,24 @@ public class MenuItemReviewController extends ApiController {
     MenuItemReview savedReview = menuItemReviewRepository.save(review);
 
     return savedReview;
+  }
+
+  /**
+   * Delete a menu item review. Accessible only to users with the role "ROLE_ADMIN".
+   *
+   * @param id the id of the menu item review to delete
+   * @return a message indicating the review was deleted
+   */
+  @Operation(summary = "Delete a menu item review")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @DeleteMapping("")
+  public Object deleteMenuItemReview(@Parameter(name = "id") @RequestParam Long id) {
+    MenuItemReview review =
+        menuItemReviewRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(MenuItemReview.class, id));
+
+    menuItemReviewRepository.delete(review);
+    return genericMessage("MenuItemReview with id %s deleted".formatted(id));
   }
 }
