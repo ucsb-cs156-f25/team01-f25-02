@@ -105,15 +105,18 @@ public class HelpRequestControllerTests extends ControllerTestCase {
     HelpRequest helpRequest1 =
         HelpRequest
             .builder() // capitol H for Helprequests because builder is a static method of the
-                       // class, it pertains to the class rather than a particular instance of a
-                       // class
+            // class, it pertains to the class rather than a particular instance of a
+            // class
             .requesterEmail("ealemus@ucsb.edu")
             .teamId("s25-5pm-3")
             .tableOrBreakoutRoom("7")
             .requestTime(zdt1)
             .explanation("Need help with HelpRequestController")
-            .solved(false)
+            .solved(true)
             .build();
+
+    // assertEquals(false, helpRequest1.getSolved()); //added this to try and pass 100% mutation
+    // coverage
 
     when(helpRequestRepository.save(eq(helpRequest1))).thenReturn(helpRequest1);
 
@@ -127,7 +130,7 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                     .param("tableOrBreakoutRoom", "7")
                     .param("requestTime", "2025-10-28T00:00:00")
                     .param("explanation", "Need help with HelpRequestController")
-                    .param("solved", "false")
+                    .param("solved", "true")
                     .with(csrf()))
             .andExpect(status().isOk())
             .andReturn();
