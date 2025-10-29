@@ -202,6 +202,39 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
 
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
+  public void an_admin_user_cannot_post_a_menuitemreview_with_stars_greater_than_5()
+      throws Exception {
+    // act - expecting IllegalArgumentException to be thrown
+    try {
+      mockMvc.perform(
+          post("/api/menuitemreview/post?itemId=27&reviewerEmail=cgaucho@ucsb.edu&stars=6&dateReviewed=2022-01-03T00:00:00&comments=Great!")
+              .with(csrf()));
+    } catch (Exception e) {
+      // Expected exception due to validation
+    }
+
+    // assert - save should never be called because validation fails
+    verify(menuItemReviewRepository, times(0)).save(any());
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void an_admin_user_cannot_post_a_menuitemreview_with_negative_stars() throws Exception {
+    // act - expecting IllegalArgumentException to be thrown
+    try {
+      mockMvc.perform(
+          post("/api/menuitemreview/post?itemId=27&reviewerEmail=cgaucho@ucsb.edu&stars=-1&dateReviewed=2022-01-03T00:00:00&comments=Bad!")
+              .with(csrf()));
+    } catch (Exception e) {
+      // Expected exception due to validation
+    }
+
+    // assert - save should never be called because validation fails
+    verify(menuItemReviewRepository, times(0)).save(any());
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
   public void admin_can_edit_an_existing_menuitemreview() throws Exception {
     // arrange
 
@@ -247,6 +280,74 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
     verify(menuItemReviewRepository, times(1)).save(reviewEdited);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(requestBody, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_cannot_edit_menuitemreview_with_stars_greater_than_5() throws Exception {
+    // arrange
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+
+    MenuItemReview reviewWithInvalidStars =
+        MenuItemReview.builder()
+            .itemId(27L)
+            .reviewerEmail("cgaucho@ucsb.edu")
+            .stars(6)
+            .dateReviewed(ldt1)
+            .comments("Too many stars!")
+            .build();
+
+    String requestBody = mapper.writeValueAsString(reviewWithInvalidStars);
+
+    // act - expecting IllegalArgumentException to be thrown
+    try {
+      mockMvc.perform(
+          put("/api/menuitemreview?id=67")
+              .contentType(MediaType.APPLICATION_JSON)
+              .characterEncoding("utf-8")
+              .content(requestBody)
+              .with(csrf()));
+    } catch (Exception e) {
+      // Expected exception due to validation
+    }
+
+    // assert - should not call findById or save because validation fails first
+    verify(menuItemReviewRepository, times(0)).findById(any());
+    verify(menuItemReviewRepository, times(0)).save(any());
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_cannot_edit_menuitemreview_with_negative_stars() throws Exception {
+    // arrange
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+
+    MenuItemReview reviewWithInvalidStars =
+        MenuItemReview.builder()
+            .itemId(27L)
+            .reviewerEmail("cgaucho@ucsb.edu")
+            .stars(-1)
+            .dateReviewed(ldt1)
+            .comments("Negative stars!")
+            .build();
+
+    String requestBody = mapper.writeValueAsString(reviewWithInvalidStars);
+
+    // act - expecting IllegalArgumentException to be thrown
+    try {
+      mockMvc.perform(
+          put("/api/menuitemreview?id=67")
+              .contentType(MediaType.APPLICATION_JSON)
+              .characterEncoding("utf-8")
+              .content(requestBody)
+              .with(csrf()));
+    } catch (Exception e) {
+      // Expected exception due to validation
+    }
+
+    // assert - should not call findById or save because validation fails first
+    verify(menuItemReviewRepository, times(0)).findById(any());
+    verify(menuItemReviewRepository, times(0)).save(any());
   }
 
   @WithMockUser(roles = {"ADMIN", "USER"})

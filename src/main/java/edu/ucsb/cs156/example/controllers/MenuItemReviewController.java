@@ -90,6 +90,10 @@ public class MenuItemReviewController extends ApiController {
 
     log.info("dateReviewed={}", dateReviewed);
 
+    if (stars < 0 || stars > 5) {
+      throw new IllegalArgumentException("Stars must be between 0 and 5");
+    }
+
     MenuItemReview review = new MenuItemReview();
     review.setItemId(itemId);
     review.setReviewerEmail(reviewerEmail);
@@ -114,6 +118,10 @@ public class MenuItemReviewController extends ApiController {
   @PutMapping("")
   public MenuItemReview updateMenuItemReview(
       @Parameter(name = "id") @RequestParam Long id, @RequestBody MenuItemReview incoming) {
+
+    if (incoming.getStars() < 0 || incoming.getStars() > 5) {
+      throw new IllegalArgumentException("Stars must be between 0 and 5");
+    }
 
     MenuItemReview review =
         menuItemReviewRepository
